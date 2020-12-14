@@ -1,0 +1,47 @@
+.container {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.habits-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-width: 90rem;
+  max-height: 40rem;
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+.habits-list {
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
+}
+
+.habit {
+  background: #e8f4f8;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+
+  &:not(.completed) {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 0 0 5px #d6eaf8;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &.completed {
+    text-decoration: line-through;
+    opacity: 80%;
+  }
+}

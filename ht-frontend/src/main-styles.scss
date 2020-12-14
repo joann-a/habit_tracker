@@ -1,0 +1,32 @@
+// import fonts (Lato and Nunito)
+@import "../node_modules/bulma/bulma.sass";
+
+$yellow: #fffd98;
+$light-green: #bde4a7;
+$turquoise-green: #b3d2b2;
+$pale-blue: #9fbbcc;
+$blue: #7a9cc6;
+
+$light: #f8f8f8;
+
+// Update Bulma's global variables
+$family-sans-serif: "Monospace";
+$primary: $blue;
+
+$link: $light-green;
+
+// Update some of Bulma's component variables
+$control-border-width: 2px;
+$input-border-color: transparent;
+$input-shadow: none;
+
+// set custom global styles (will be applied to whole app)
+html {
+  background: linear-gradient(to right top, #FFEBDC
+  , #fffacd);
+}
+
+html,
+body {
+  height: 100%;
+}

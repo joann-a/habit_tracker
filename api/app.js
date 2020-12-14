@@ -38,6 +38,8 @@ app.post("/habitlist", (req, res) => {
     });
 });
 
+/*-------------------------------- apis for habit lists ------------------------------------------*/
+
 // GET /habitlist
 // Purpose: get all habitlists
 app.get("/habitlist", (req, res) => {
@@ -75,8 +77,9 @@ app.get("/habitlist/:habitlistId/habits", (req, res) => {
     });
 });
 
+/*-------------------------------- apis for habits ------------------------------------------*/
 // GET /habitlist/:habitlistId/habits/habitId
-// Purpose: get one habit in a specific habitlist
+// Purpose: get one habit in a habitlist
 app.get("/habitlist/:habitlistId/habits/habitId ", (req, res) => {
   Task.findOne({
     _habitId: req.params.habitId,
@@ -87,7 +90,7 @@ app.get("/habitlist/:habitlistId/habits/habitId ", (req, res) => {
 });
 
 /* POST /habitlist/:habitlistId/habits
-Purpose: create new habits in a specific habitlist */
+Purpose: create new habit in a specific habitlist */
 app.post("/habitlist/:habitlistId/habits", (req, res) => {
   // We want to create a new task in a list specified by listId
   let newHabit = new Habit({
