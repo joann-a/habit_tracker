@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { stringify } = require("querystring");
 
 const HabitSchema = new mongoose.Schema({
   name: {
@@ -8,9 +7,18 @@ const HabitSchema = new mongoose.Schema({
     minlength: 1,
     trim: true,
   },
-  _habitlistId: {
-    type: mongoose.Types.ObjectId,
-    required: true,
+  why: {
+    type: String,
+    minlength: 1,
+    trim: true,
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+  streak: {
+    type: Number,
+    default: 0,
   },
 });
 

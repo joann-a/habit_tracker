@@ -1,108 +1,89 @@
 const express = require("express");
 const app = express();
-const port = 7000;
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-const { mongoose } = require("./db/mongoose");
-
-const { HabitList, Habit } = require("./db/models/index");
-
+const port = 3000;
+const mongoose = require("./db/mongoose");
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
+const cors = require("cors");
 
-// start server and listen to port 7000 for connections
+const { Habit } = require("./db/models/index");
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+
+// parse application/json
+app.use(bodyParser.json());
+
+// CORS headers middleware
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE"
+  );
+  next();
+});
+app.use(cors());
+
+// start server and listen to port 3000 for connections
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);
 });
 
-// Post /habitlist
-// Purpose: create a habitslist
-app.post("/habitlist", (req, res) => {
-  // create a new habitlist and return the list back to user
-  let title = req.body.title;
-  console.log(`title is: ${title}`);
-
-  let newHabitlist = new HabitList({
-    title,
-  });
-
-  newHabitlist
-    .save()
-    .then((habitsDoc) => {
-      res.send(habitsDoc);
-      res.end();
-    })
-    .catch((e) => {
-      console.log(e);
-      res.send("error in posting habitlist");
-    });
-});
-
-/*-------------------------------- apis for habit lists ------------------------------------------*/
-
-// GET /habitlist
-// Purpose: get all habitlists
-app.get("/habitlist", (req, res) => {
-  // create a new habitlist and return the list back to user
-  HabitList.find().then((habitlists) => {
-    res.send(habitlists);
-  });
-});
-
-/* PATCH /lists/:id
-   Purpose: update a habitlist */
-app.patch("/lists/:id", (req, res) => {
-  // update habitlist with the new values specified in the JSON body of the request
-  List.findOneAndUpdate(
-    { _id: req.params.id },
-    // MongoDB key word set, updates list that it finds using the body
-    {
-      $set: req.body,
-    }
-  ).then(() => res.sendStatus(200));
-});
-
-/* GET /habitlist/:habitlistId/habits 
-Purpose: get all habits in a specific habitlist */
-app.get("/habitlist/:habitlistId/habits", (req, res) => {
-  // We want to return all tasks that belong to a specific list (specified by listId)
-  Habit.find({
-    _habitlistId: req.params.habitlistId,
-  })
-    .then((habits) => {
-      res.send(habits);
-    })
-    .catch((e) => {
-      res.send("could not get habits for a specific habit list");
-    });
-});
-
 /*-------------------------------- apis for habits ------------------------------------------*/
-// GET /habitlist/:habitlistId/habits/habitId
-// Purpose: get one habit in a habitlist
-app.get("/habitlist/:habitlistId/habits/habitId ", (req, res) => {
-  Task.findOne({
+
+// GET /habits
+// Purpose: get one habit - may not be needed currently
+/* app.get("/habitlist/:habitlistId/habits/habitId", (req, res) => {
+  Habit.findOne({
     _habitId: req.params.habitId,
     __habitlistId: req.params.habitlistId,
   }).then((habit) => {
     res.send(habit);
   });
 });
+ */
 
-/* POST /habitlist/:habitlistId/habits
-Purpose: create new habit in a specific habitlist */
-app.post("/habitlist/:habitlistId/habits", (req, res) => {
+// the get method arrives at endpoint, the callback function is exe when the endpoint is reached
+app.get("/habits", async (req, res) => {
+  try {
+    const habits = await Habit.find();
+    console.log(habits);
+    res.json(habits);
+  } catch (err) {
+    res.send({ message: err });
+    console.log("error");
+  }
+});
+
+app.get("/edit-habit/:habitId", async (req, res) => {
+  try {
+    const habit = await Habit.findByIdAndUpdate(req.params.habitId);
+    res.json(habit);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
+
+/* POST /habits
+Purpose: create new habit */
+app.post("/new-habit", (req, res) => {
+  console.log("about to make it");
   // We want to create a new task in a list specified by listId
   let newHabit = new Habit({
     name: req.body.name,
-    _habitlistId: req.params.habitlistId,
+    why: req.body.why,
   });
 
-  console.log(`newhabit title: ${newHabit.title}`);
+  console.log(`newhabit name: ${newHabit.name}`);
   newHabit
     .save()
-    .then((newHabitDoc) => {
-      res.send(newHabitDoc);
+    .then(() => {
+      res.send({ message: "successfully created new habit" });
     })
     .catch((e) => {
       console.log(e);
@@ -110,20 +91,21 @@ app.post("/habitlist/:habitlistId/habits", (req, res) => {
     });
 });
 
-/* PATCH /habitlist/:habitlistId/habits/habitId
+/* PATCH /habits/habitId
 Purpose: update an existing habit */
-app.patch("/habitlist/:habitlistId/habits/:habitId", (req, res) => {
+app.patch("/habits/:habitId", (req, res) => {
   Habit.findOneAndUpdate(
     {
       _id: req.params.habitId,
-      _habitlistId: req.params.habitlistId,
     },
     {
       $set: req.body,
     }
   )
-    .then(() => {
-      res.sendStatus(200);
+    .then((data) => {
+      // console.log(data);
+      console.log("successfully updated");
+      res.status(200).send(data);
     })
     .catch((e) => {
       console.log(e);
@@ -131,21 +113,15 @@ app.patch("/habitlist/:habitlistId/habits/:habitId", (req, res) => {
     });
 });
 
-app.delete("/lists/:id/habits/:habitId", (req, res) => {
-  Habit.findOneAndRemove(
-    {
-      _id: req.params.id,
-      _habitId: req.params.habitId,
-    },
-    {
-      $set: req.body,
-    }
-  )
-    .then((removedHabitDoc) => {
-      res.send(removedHabitDoc);
+app.delete("/habits/:habitId", (req, res) => {
+  Habit.findOneAndRemove({
+    _id: req.params.habitId,
+  })
+    .then(() => {
+      res.status(200).send({ message: "successfully removed" });
     })
     .catch((e) => {
       console.log(e);
-      res.send("cound not delete habit");
+      res.send("could not delete habit");
     });
 });

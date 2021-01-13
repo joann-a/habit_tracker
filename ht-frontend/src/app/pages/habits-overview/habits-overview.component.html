@@ -1,17 +1,33 @@
 <div class="container is-flex-direction-column">
   <app-navbar></app-navbar>
-  <div class="habits-container has-background-white">
-    <div class="habits-list is-flex-direction-column">
-      <p class="title has-primary-text">Habits</p>
-      <div class="habit">
-        <p>Habit 1</p>
+  <div class="habits-container has-background-white is-flex-direction-column">
+    <h1 class="title">Habits</h1>
+    <tbody>
+      <div class="habit" *ngFor="let habit of habits">
+        <tr>
+          <td [class.completed]="habit.completed === true">
+            <input
+              type="checkbox"
+              id="checkbox"
+              (change)="onClickHabit(habit)"
+              [disabled]="habit.completed === true"
+            />
+            {{ habit.name }}
+          </td>
+        </tr>
+        <tr>
+          <td class="habit-info">Why: {{ habit.why }}</td>
+          <td class="habit-info">Streak: {{ habit.streak }}</td>
+          <td class="change-habit">
+            <btn class="edit" [routerLink]="['/edit-habit', habit._id]"
+              ><fa-icon [icon]="faEdit"></fa-icon
+            ></btn>
+            <btn class="remove" (click)="onClickRemove(habit)"
+              ><fa-icon [icon]="faTrashAlt"></fa-icon>
+            </btn>
+          </td>
+        </tr>
       </div>
-      <div class="habit completed">
-        <p>Habit 2</p>
-      </div>
-      <div class="habit active">
-        <p>Habit 3</p>
-      </div>
-    </div>
+    </tbody>
   </div>
 </div>

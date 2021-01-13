@@ -1,6 +1,5 @@
 .navbar {
-  justify-content: center;
-  align-items: center;
+  margin-top: 0.7rem;
   height: 0.7rem;
   background: transparent;
   overflow: hidden;
@@ -8,6 +7,10 @@
 
 .navbar-item {
   &:hover {
-    background: #e8f4f8;
+    background: #e5e4e2;
   }
+}
+
+.navbar-end {
+  margin-left: 58.5rem;
 }

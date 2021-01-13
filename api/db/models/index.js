@@ -1,4 +1,3 @@
-const { HabitList } = require("./habits.model");
 const { Habit } = require("./habit.model");
-
-module.exports = { HabitList, Habit };
+// const { HabitEvent } = require("./habitevent.model");
+module.exports = { Habit };
