@@ -3,7 +3,9 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {Resolver} from './resolver'
+import { Resolver } from './resolver';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +28,8 @@ import { EditHabitComponent } from './pages/edit-habit/edit-habit.component';
     HttpClientModule,
     ReactiveFormsModule,
     FontAwesomeModule,
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule,
   ],
   providers: [Resolver],
   bootstrap: [AppComponent],

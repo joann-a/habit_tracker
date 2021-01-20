@@ -26,10 +26,37 @@ export class HabitService {
     return this.http.post(`${this.ROOT_URL}/new-habit`, { name, why });
   }
 
+  editHabit(id: string, name: string, why: string) {
+    // console.log('reached service');
+    return this.http.patch(`${this.ROOT_URL}/habits/${id}`, {
+      name,
+      why,
+    });
+  }
+
   completed(habit: Habit) {
     return this.http.patch(`${this.ROOT_URL}/habits/${habit._id}`, {
       completed: !habit.completed,
+      lastCompleted: Date.now(),
+    });
+  }
+
+  resetCompleted(habit: Habit) {
+    return this.http.patch(`${this.ROOT_URL}/habits/${habit._id}`, {
+      completed: false,
+    });
+  }
+
+  updateStreak(habit: Habit) {
+    return this.http.patch(`${this.ROOT_URL}/habits/${habit._id}`, {
       streak: habit.streak + 1,
+    });
+  }
+
+  resetStreak(habit: Habit) {
+    console.log(habit._id);
+    return this.http.patch(`${this.ROOT_URL}/habits/${habit._id}`, {
+      streak: 0,
     });
   }
 

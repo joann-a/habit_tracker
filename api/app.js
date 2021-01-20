@@ -91,9 +91,14 @@ app.post("/new-habit", (req, res) => {
     });
 });
 
+app.post("/habits/:id", (req, res) => {
+  console.log("about to log event");
+});
+
 /* PATCH /habits/habitId
 Purpose: update an existing habit */
 app.patch("/habits/:habitId", (req, res) => {
+  console.log("reached api call");
   Habit.findOneAndUpdate(
     {
       _id: req.params.habitId,
@@ -103,8 +108,8 @@ app.patch("/habits/:habitId", (req, res) => {
     }
   )
     .then((data) => {
-      // console.log(data);
       console.log("successfully updated");
+      // the data being sent back is from the req *before* being updated
       res.status(200).send(data);
     })
     .catch((e) => {

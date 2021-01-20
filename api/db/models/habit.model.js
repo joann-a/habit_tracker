@@ -20,6 +20,9 @@ const HabitSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  lastCompleted: {
+    type: Date,
+  },
 });
 
 const Habit = mongoose.model("Habit", HabitSchema);
